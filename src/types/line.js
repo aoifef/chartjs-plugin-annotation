@@ -160,16 +160,16 @@ module.exports = function(Chart) {
 			model.labelX = labelPosition.x - model.labelXPadding;
 			model.labelY = labelPosition.y - model.labelYPadding;
 
-			if(options.label.labelHeight === null){
-			    model.labelHeight = textHeight + (2 * model.labelYPadding);
-			} else {
-			    model.labelHeight = options.label.labelHeight + (2 * model.labelYPadding);
-			}
+            if(options.label.labelHeight === null){
+                model.labelHeight = textHeight + (2 * model.labelYPadding);
+            } else {
+                model.labelHeight = options.label.labelHeight + (2 * model.labelYPadding);
+            }
 
             if(options.label.labelWidth === null){
                 model.labelWidth = textWidth + (2 * model.labelXPadding);
             } else {
-			    model.labelWidth = options.label.labelWidth + (2 * model.labelXPadding);
+                model.labelWidth = options.label.labelWidth + (2 * model.labelXPadding);
             }
 
 			model.borderColor = options.borderColor;
@@ -265,9 +265,9 @@ module.exports = function(Chart) {
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
 
-				var labelContentArray = view.labelContent.split("\n");
+                var labelContentArray = view.labelContent.split("\n");
                 var textXPosition = (view.labelX + view.labelWidth/2);
-				var textYPosition = view.labelY + (view.labelYPadding + (view.labelFontSize/2));
+                var textYPosition = view.labelY + (view.labelYPadding + (view.labelFontSize/2));
 
                 for (var i = 0; i < labelContentArray.length; i++) {
                     ctx.fillText(
@@ -275,10 +275,11 @@ module.exports = function(Chart) {
                         textXPosition,
                         textYPosition
                     );
-                   textYPosition += view.labelFontSize;
+
+                    textYPosition += view.labelFontSize;
                 }
 
-			}
+            }
 
 			ctx.restore();
 		}
