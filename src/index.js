@@ -31,7 +31,9 @@ Chart.Annotation.labelDefaults = {
 	xAdjust: 0,
 	yAdjust: 0,
 	enabled: false,
-	content: null
+	content: null,
+	labelHeight: null,
+	labelWidth: null
 };
 
 Chart.Annotation.Element = require('./element.js')(Chart);

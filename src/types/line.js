@@ -159,8 +159,18 @@ module.exports = function(Chart) {
 			var labelPosition = calculateLabelPosition(model, textWidth, textHeight, model.labelXPadding, model.labelYPadding);
 			model.labelX = labelPosition.x - model.labelXPadding;
 			model.labelY = labelPosition.y - model.labelYPadding;
-			model.labelWidth = textWidth + (2 * model.labelXPadding);
-			model.labelHeight = textHeight + (2 * model.labelYPadding);
+
+            if(options.label.labelHeight === null){
+                model.labelHeight = textHeight + (2 * model.labelYPadding);
+            } else {
+                model.labelHeight = options.label.labelHeight + (2 * model.labelYPadding);
+            }
+
+            if(options.label.labelWidth === null){
+                model.labelWidth = textWidth + (2 * model.labelXPadding);
+            } else {
+                model.labelWidth = options.label.labelWidth + (2 * model.labelXPadding);
+            }
 
 			model.borderColor = options.borderColor;
 			model.borderWidth = options.borderWidth;
@@ -254,12 +264,22 @@ module.exports = function(Chart) {
 				ctx.fillStyle = view.labelFontColor;
 				ctx.textAlign = 'center';
 				ctx.textBaseline = 'middle';
-				ctx.fillText(
-					view.labelContent,
-					view.labelX + (view.labelWidth / 2),
-					view.labelY + (view.labelHeight / 2)
-				);
-			}
+
+                var labelContentArray = view.labelContent.split("\n");
+                var textXPosition = (view.labelX + view.labelWidth/2);
+                var textYPosition = view.labelY + (view.labelYPadding + (view.labelFontSize/2));
+
+                for (var i = 0; i < labelContentArray.length; i++) {
+                    ctx.fillText(
+                        labelContentArray[i],
+                        textXPosition,
+                        textYPosition
+                    );
+
+                    textYPosition += view.labelFontSize;
+                }
+
+            }
 
 			ctx.restore();
 		}
