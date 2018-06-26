@@ -1,7 +1,7 @@
 {
-  "name": "chartjs-plugin-annotation",
+  "name": "chartjs-plugin-annotation-smart-fork",
   "description": "Annotations for Chart.js",
-  "version": "0.5.7",
+  "version": "0.0.1",
   "author": "Evert Timberg <evert.timberg@gmail.com>",
   "license": "MIT",
   "main": "src/index.js",
