@@ -812,18 +812,26 @@ module.exports = function(Chart) {
 			model.labelEnabled = options.label.enabled;
 			model.labelContent = options.label.content;
 
-            var labelContentArray = model.labelContent.split("\n");
-            var longestLabel = labelContentArray.sort(function (a, b) { return b.length - a.length; })[0];
-
 			ctx.font = chartHelpers.fontString(model.labelFontSize, model.labelFontStyle, model.labelFontFamily);
-			var textWidth = ctx.measureText(longestLabel).width;
 			var textHeight = ctx.measureText('M').width;
+
+            if(model.labelContent !== null){
+                var labelContentArray = model.labelContent.split("\n");
+                var longestLabel = labelContentArray.sort(function (a, b) { return b.length - a.length; })[0];
+			    var textWidth = ctx.measureText(longestLabel).width;
+                model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding);
+			} else {
+                var textWidth = ctx.measureText(model.labelContent).width;
+                model.labelHeight = textHeight + (2 * model.labelYPadding);
+			}
+
+            model.labelWidth = textWidth + (2 * model.labelXPadding);
 			var labelPosition = calculateLabelPosition(model, textWidth, textHeight, model.labelXPadding, model.labelYPadding);
 			model.labelX = labelPosition.x - model.labelXPadding;
 			model.labelY = labelPosition.y - model.labelYPadding;
 
-            model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding);
-            model.labelWidth = textWidth + (2 * model.labelXPadding);
+
+
 
 			model.borderColor = options.borderColor;
 			model.borderWidth = options.borderWidth;
