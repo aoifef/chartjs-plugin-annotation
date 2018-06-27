@@ -153,24 +153,18 @@ module.exports = function(Chart) {
 			model.labelEnabled = options.label.enabled;
 			model.labelContent = options.label.content;
 
+            var labelContentArray = model.labelContent.split("\n");
+            var longestLabel = labelContentArray.sort(function (a, b) { return b.length - a.length; })[0];
+
 			ctx.font = chartHelpers.fontString(model.labelFontSize, model.labelFontStyle, model.labelFontFamily);
-			var textWidth = ctx.measureText(model.labelContent).width;
+			var textWidth = ctx.measureText(longestLabel).width;
 			var textHeight = ctx.measureText('M').width;
 			var labelPosition = calculateLabelPosition(model, textWidth, textHeight, model.labelXPadding, model.labelYPadding);
 			model.labelX = labelPosition.x - model.labelXPadding;
 			model.labelY = labelPosition.y - model.labelYPadding;
 
-            if(options.label.labelHeight === null){
-                model.labelHeight = textHeight + (2 * model.labelYPadding);
-            } else {
-                model.labelHeight = options.label.labelHeight + (2 * model.labelYPadding);
-            }
-
-            if(options.label.labelWidth === null){
-                model.labelWidth = textWidth + (2 * model.labelXPadding);
-            } else {
-                model.labelWidth = options.label.labelWidth + (2 * model.labelXPadding);
-            }
+            model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding);
+            model.labelWidth = textWidth + (2 * model.labelXPadding);
 
 			model.borderColor = options.borderColor;
 			model.borderWidth = options.borderWidth;
