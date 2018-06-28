@@ -485,7 +485,9 @@ Chart.Annotation.labelDefaults = {
 	fontFamily: Chart.defaults.global.defaultFontFamily,
 	fontSize: Chart.defaults.global.defaultFontSize,
 	fontStyle: 'bold',
-	fontColor: '#fff',
+    fontColor: '#fff',
+	titleFontStyle: 'bold',
+    titleFontColor: '#fff',
 	xPadding: 6,
 	yPadding: 6,
 	cornerRadius: 6,
@@ -493,7 +495,8 @@ Chart.Annotation.labelDefaults = {
 	xAdjust: 0,
 	yAdjust: 0,
 	enabled: false,
-	content: null
+	content: null,
+	title: null
 };
 
 Chart.Annotation.Element = require('./element.js')(Chart);
@@ -803,6 +806,8 @@ module.exports = function(Chart) {
 			model.labelFontSize = options.label.fontSize;
 			model.labelFontStyle = options.label.fontStyle;
 			model.labelFontColor = options.label.fontColor;
+            model.titleFontStyle = options.label.titleFontStyle;
+            model.titleFontColor = options.label.titleFontColor;
 			model.labelXPadding = options.label.xPadding;
 			model.labelYPadding = options.label.yPadding;
 			model.labelCornerRadius = options.label.cornerRadius;
@@ -811,15 +816,23 @@ module.exports = function(Chart) {
 			model.labelYAdjust = options.label.yAdjust;
 			model.labelEnabled = options.label.enabled;
 			model.labelContent = options.label.content;
+			model.labelTitle = options.label.title;
 
 			ctx.font = chartHelpers.fontString(model.labelFontSize, model.labelFontStyle, model.labelFontFamily);
-			var textHeight = ctx.measureText('M').width;
-
+			var textHeight = model.labelFontSize + 1;
             if(model.labelContent !== null){
                 var labelContentArray = model.labelContent.split("\n");
+                if(model.labelTitle !== null){
+                    labelContentArray.push(model.labelTitle);
+                }
+
                 var longestLabel = labelContentArray.sort(function (a, b) { return b.length - a.length; })[0];
 			    var textWidth = ctx.measureText(longestLabel).width;
-                model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding);
+
+                model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding) + (3 * (labelContentArray.length - 1));
+                if(model.labelTitle !== null){
+                    model.labelHeight += 6;
+                }
 			} else {
                 var textWidth = ctx.measureText(model.labelContent).width;
                 model.labelHeight = textHeight + (2 * model.labelYPadding);
@@ -829,9 +842,6 @@ module.exports = function(Chart) {
 			var labelPosition = calculateLabelPosition(model, textWidth, textHeight, model.labelXPadding, model.labelYPadding);
 			model.labelX = labelPosition.x - model.labelXPadding;
 			model.labelY = labelPosition.y - model.labelYPadding;
-
-
-
 
 			model.borderColor = options.borderColor;
 			model.borderWidth = options.borderWidth;
@@ -916,6 +926,29 @@ module.exports = function(Chart) {
 				);
 				ctx.fill();
 
+                var textXPosition = view.labelX + view.labelXPadding;
+                var textYPosition = view.labelY + view.labelYPadding;
+
+                if(view.labelTitle !== null) {
+                    // Draw the title
+                    ctx.font = chartHelpers.fontString(
+                        view.labelFontSize,
+                        view.titleFontStyle,
+                        view.labelFontFamily
+                    );
+                    ctx.fillStyle = view.titleFontColor;
+                    ctx.textAlign = 'left';
+                    ctx.textBaseline = 'top';
+
+                    ctx.fillText(
+                        view.labelTitle,
+                        textXPosition,
+                        textYPosition
+                    );
+
+                    textYPosition += (view.labelFontSize + 9);
+                }
+
 				// Draw the text
 				ctx.font = chartHelpers.fontString(
 					view.labelFontSize,
@@ -923,12 +956,10 @@ module.exports = function(Chart) {
 					view.labelFontFamily
 				);
 				ctx.fillStyle = view.labelFontColor;
-				ctx.textAlign = 'center';
-				ctx.textBaseline = 'middle';
+				ctx.textAlign = 'left';
+				ctx.textBaseline = 'top';
 
                 var labelContentArray = view.labelContent.split("\n");
-                var textXPosition = (view.labelX + view.labelWidth/2);
-                var textYPosition = view.labelY + (view.labelYPadding + (view.labelFontSize/2));
 
                 for (var i = 0; i < labelContentArray.length; i++) {
                     ctx.fillText(
@@ -937,7 +968,7 @@ module.exports = function(Chart) {
                         textYPosition
                     );
 
-                    textYPosition += view.labelFontSize;
+                    textYPosition += (view.labelFontSize + 3);
                 }
 
             }
