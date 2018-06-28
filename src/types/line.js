@@ -157,8 +157,8 @@ module.exports = function(Chart) {
 			model.labelTitle = options.label.title;
 
 			ctx.font = chartHelpers.fontString(model.labelFontSize, model.labelFontStyle, model.labelFontFamily);
-			var textHeight = model.labelFontSize + 1;
-            if(model.labelContent !== null){
+			var textHeight = model.labelFontSize;
+            if(model.labelContent !== null) {
                 var labelContentArray = model.labelContent.split("\n");
                 if(model.labelTitle !== null){
                     labelContentArray.push(model.labelTitle);
@@ -167,12 +167,16 @@ module.exports = function(Chart) {
                 var longestLabel = labelContentArray.sort(function (a, b) { return b.length - a.length; })[0];
 			    var textWidth = ctx.measureText(longestLabel).width;
 
-                model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding) + (3 * (labelContentArray.length - 1));
-                if(model.labelTitle !== null){
-                    model.labelHeight += 6;
+                model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding);
+                if(labelContentArray.length > 1) {
+                    model.labelHeight += (5 * (labelContentArray.length - 1));
                 }
+                if(model.labelTitle !== null) {
+                    model.labelHeight += 4;
+                }
+
 			} else {
-                var textWidth = ctx.measureText(model.labelContent).width;
+                var textWidth = ctx.measureText(model.labeltTitle).width;
                 model.labelHeight = textHeight + (2 * model.labelYPadding);
 			}
 
@@ -306,7 +310,7 @@ module.exports = function(Chart) {
                         textYPosition
                     );
 
-                    textYPosition += (view.labelFontSize + 3);
+                    textYPosition += (view.labelFontSize + 5);
                 }
 
             }
