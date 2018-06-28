@@ -928,7 +928,7 @@ module.exports = function(Chart) {
 
                 var textXPosition = view.labelX + view.labelXPadding;
                 var textYPosition = view.labelY + view.labelYPadding;
-console.log(view);
+
                 if(view.labelTitle !== null) {
                     // Draw the title
                     ctx.font = chartHelpers.fontString(
