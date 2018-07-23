@@ -78,6 +78,7 @@ module.exports = function(Chart) {
 					options.onClick.call(element, e);
 				}, dblClickSpeed);
 				e.stopImmediatePropagation();
+				e.preventDefault();
 				return;
 			} else if (e.type === 'dblclick' && element.clickTimeout) {
 				clearTimeout(element.clickTimeout);
@@ -92,6 +93,7 @@ module.exports = function(Chart) {
 
 		if (eventHandlers.length > 0) {
 			e.stopImmediatePropagation();
+            e.preventDefault();
 			eventHandlers.forEach(function(eventHandler) {
 				// [handler, event, element]
 				eventHandler[0].call(eventHandler[2], eventHandler[1]);

@@ -24,8 +24,6 @@ Chart.Annotation.labelDefaults = {
 	fontSize: Chart.defaults.global.defaultFontSize,
 	fontStyle: 'bold',
     fontColor: '#fff',
-	titleFontStyle: 'bold',
-    titleFontColor: '#fff',
 	xPadding: 6,
 	yPadding: 6,
 	cornerRadius: 6,
@@ -33,8 +31,7 @@ Chart.Annotation.labelDefaults = {
 	xAdjust: 0,
 	yAdjust: 0,
 	enabled: false,
-	content: null,
-	title: null
+	content: null
 };
 
 Chart.Annotation.Element = require('./element.js')(Chart);

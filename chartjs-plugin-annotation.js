@@ -486,8 +486,6 @@ Chart.Annotation.labelDefaults = {
 	fontSize: Chart.defaults.global.defaultFontSize,
 	fontStyle: 'bold',
     fontColor: '#fff',
-	titleFontStyle: 'bold',
-    titleFontColor: '#fff',
 	xPadding: 6,
 	yPadding: 6,
 	cornerRadius: 6,
@@ -495,8 +493,7 @@ Chart.Annotation.labelDefaults = {
 	xAdjust: 0,
 	yAdjust: 0,
 	enabled: false,
-	content: null,
-	title: null
+	content: null
 };
 
 Chart.Annotation.Element = require('./element.js')(Chart);
@@ -806,8 +803,6 @@ module.exports = function(Chart) {
 			model.labelFontSize = options.label.fontSize;
 			model.labelFontStyle = options.label.fontStyle;
 			model.labelFontColor = options.label.fontColor;
-            model.titleFontStyle = options.label.titleFontStyle;
-            model.titleFontColor = options.label.titleFontColor;
 			model.labelXPadding = options.label.xPadding;
 			model.labelYPadding = options.label.yPadding;
 			model.labelCornerRadius = options.label.cornerRadius;
@@ -816,31 +811,22 @@ module.exports = function(Chart) {
 			model.labelYAdjust = options.label.yAdjust;
 			model.labelEnabled = options.label.enabled;
 			model.labelContent = options.label.content;
-			model.labelTitle = options.label.title;
 
 			ctx.font = chartHelpers.fontString(model.labelFontSize, model.labelFontStyle, model.labelFontFamily);
+			var textWidth = ctx.measureText(model.labelContent).width;
 			var textHeight = model.labelFontSize;
-            if(model.labelContent !== null) {
+            model.labelHeight = textHeight + (2 * model.labelYPadding);
+
+            if(model.labelContent !== null && model.labelContent.indexOf("\n") !== -1) {
                 var labelContentArray = model.labelContent.split("\n");
-                if(model.labelTitle !== null){
-                    labelContentArray.push(model.labelTitle);
-                }
 
                 var longestLabel = labelContentArray.sort(function (a, b) { return b.length - a.length; })[0];
-			    var textWidth = ctx.measureText(longestLabel).width;
+                textWidth = ctx.measureText(longestLabel).width;
 
                 model.labelHeight = (textHeight * labelContentArray.length) + (2 * model.labelYPadding);
-                if(labelContentArray.length > 1) {
-                    model.labelHeight += (5 * (labelContentArray.length - 1));
-                }
-                if(model.labelTitle !== null) {
-                    model.labelHeight += 4;
-                }
-
-			} else {
-                var textWidth = ctx.measureText(model.labeltTitle).width;
-                model.labelHeight = textHeight + (2 * model.labelYPadding);
-			}
+                //Add padding for in between each label item
+                model.labelHeight += (5 * (labelContentArray.length - 1));
+            }
 
             model.labelWidth = textWidth + (2 * model.labelXPadding);
 			var labelPosition = calculateLabelPosition(model, textWidth, textHeight, model.labelXPadding, model.labelYPadding);
@@ -930,29 +916,6 @@ module.exports = function(Chart) {
 				);
 				ctx.fill();
 
-                var textXPosition = view.labelX + view.labelXPadding;
-                var textYPosition = view.labelY + view.labelYPadding;
-
-                if(view.labelTitle !== null) {
-                    // Draw the title
-                    ctx.font = chartHelpers.fontString(
-                        view.labelFontSize,
-                        view.titleFontStyle,
-                        view.labelFontFamily
-                    );
-                    ctx.fillStyle = view.titleFontColor;
-                    ctx.textAlign = 'left';
-                    ctx.textBaseline = 'top';
-
-                    ctx.fillText(
-                        view.labelTitle,
-                        textXPosition,
-                        textYPosition
-                    );
-
-                    textYPosition += (view.labelFontSize + 9);
-                }
-
 				// Draw the text
 				ctx.font = chartHelpers.fontString(
 					view.labelFontSize,
@@ -960,21 +923,30 @@ module.exports = function(Chart) {
 					view.labelFontFamily
 				);
 				ctx.fillStyle = view.labelFontColor;
-				ctx.textAlign = 'left';
-				ctx.textBaseline = 'top';
+                ctx.textAlign = 'center';
 
-                var labelContentArray = view.labelContent.split("\n");
+                if(view.labelContent !== null && view.labelContent.indexOf("\n") !== -1) {
+                    var textYPosition = (view.labelY + view.labelYPadding);
+                    var labelContentArray = view.labelContent.split("\n");
 
-                for (var i = 0; i < labelContentArray.length; i++) {
+                    for (var i = 0; i < labelContentArray.length; i++) {
+                        ctx.textBaseline = 'top';
+                        ctx.fillText(
+                            labelContentArray[i],
+                            view.labelX + (view.labelWidth / 2),
+                            textYPosition
+                        );
+
+                        textYPosition += (view.labelFontSize + 5);
+                    }
+                } else {
+                    ctx.textBaseline = 'middle';
                     ctx.fillText(
-                        labelContentArray[i],
-                        textXPosition,
-                        textYPosition
+                        view.labelContent,
+                        view.labelX + (view.labelWidth / 2),
+                        view.labelY + (view.labelHeight / 2)
                     );
-
-                    textYPosition += (view.labelFontSize + 5);
                 }
-
             }
 
 			ctx.restore();
