@@ -156,7 +156,7 @@ module.exports = function(Chart) {
 			ctx.font = chartHelpers.fontString(model.labelFontSize, model.labelFontStyle, model.labelFontFamily);
 			var textWidth = ctx.measureText(model.labelContent).width;
 			var textHeight = model.labelFontSize;
-            model.labelHeight = textHeight + (2 * model.labelYPadding);
+			model.labelHeight = textHeight + (2 * model.labelYPadding);
 
             if(model.labelContent !== null && model.labelContent.indexOf("\n") !== -1) {
                 var labelContentArray = model.labelContent.split("\n");
