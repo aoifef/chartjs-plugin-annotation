@@ -1,7 +1,7 @@
 /*!
  * chartjs-plugin-annotation.js
  * http://chartjs.org/
- * Version: 0.0.1
+ * Version: 0.5.7
  *
  * Copyright 2016 Evert Timberg
  * Released under the MIT license
@@ -245,6 +245,7 @@ module.exports = function(Chart) {
 					options.onClick.call(element, e);
 				}, dblClickSpeed);
 				e.stopImmediatePropagation();
+				e.preventDefault();
 				return;
 			} else if (e.type === 'dblclick' && element.clickTimeout) {
 				clearTimeout(element.clickTimeout);
@@ -259,6 +260,7 @@ module.exports = function(Chart) {
 
 		if (eventHandlers.length > 0) {
 			e.stopImmediatePropagation();
+            e.preventDefault();
 			eventHandlers.forEach(function(eventHandler) {
 				// [handler, event, element]
 				eventHandler[0].call(eventHandler[2], eventHandler[1]);
@@ -485,7 +487,7 @@ Chart.Annotation.labelDefaults = {
 	fontFamily: Chart.defaults.global.defaultFontFamily,
 	fontSize: Chart.defaults.global.defaultFontSize,
 	fontStyle: 'bold',
-    fontColor: '#fff',
+	fontColor: '#fff',
 	xPadding: 6,
 	yPadding: 6,
 	cornerRadius: 6,

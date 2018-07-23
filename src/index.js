@@ -23,7 +23,7 @@ Chart.Annotation.labelDefaults = {
 	fontFamily: Chart.defaults.global.defaultFontFamily,
 	fontSize: Chart.defaults.global.defaultFontSize,
 	fontStyle: 'bold',
-    fontColor: '#fff',
+	fontColor: '#fff',
 	xPadding: 6,
 	yPadding: 6,
 	cornerRadius: 6,
